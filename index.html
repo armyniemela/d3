@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- some basic stuff  -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My D3</title>
+
+    <!-- 
+      add your stylesheet 
+      base.css loads the basic stuff
+      you can tweak your css in custom.css
+      WARNING: the order of the stylesheets matters
+    -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="custom.css">
+
+    <!-- add your d3 script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    
+    <!-- your JS code that uses d3 to manipulate data -->
+    <script>
+      // Step 4. load your data with d3.csv()
+      d3.csv("powerpeople.csv")
+        .then(data => {
+          // check if the data is loaded:
+          console.log(data)
+
+          // == your code happens below ==
+          
+          // Step 5. create an SVG container inside #my-svg-chart using d3.select().append()
+          const myChart = d3
+            .select('#my-svg-chart')
+            .append('svg')
+            .attr('width', 800)
+            .attr('height', 800);
+          // Add a legend
+          const legendData = [
+            { label: '5 board seats: 3 persons', color: 'Maroon' },
+            { label: '4 board seats: 3', color: 'IndianRed' },
+            { label: '3 board seats: 28', color: 'pink' },
+            { label: '2 board seats: 125 ', color: 'LightCoral' },
+            { label: '1 board seat: 985', color: 'LightSalmon' }
+          
+          ];
+
+          const legend = myChart
+            .selectAll('.legend')
+            .data(legendData)
+            .enter()
+            .append('g')
+            .attr('class', 'legend')
+            .attr('transform', (d, i) => `translate(0, ${i * 20})`);
+
+          legend.append('rect')
+            .attr('x', 10)
+            .attr('y', 10)
+            .attr('width', 10)
+            .attr('height', 10)
+            .style('fill', d => d.color);
+
+          legend.append('text')
+            .attr('x', 25)
+            .attr('y', 15)
+            .attr('dy', '.35em')
+            .style('text-anchor', 'start')
+            .text(d => d.label);
+
+          // Create a tooltip div that is hidden by default
+          const tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("visibility", "hidden")
+            .style("background-color", "white")
+            .style("border", "1px solid #ccc")
+            .style("padding", "5px")
+            .style("border-radius", "5px")
+            .style("box-shadow", "0px 0px 5px #aaa");
+
+          // Create SVG elements binded with data
+          const Boardseats = myChart
+            .selectAll('rect.Boardseats')
+            .data(data)
+            .join('rect')
+            .attr('class', 'Boardseats');
+
+          // Position the SVG shapes at the right places
+          const gridSize = 15, gap = 2;
+
+          Boardseats
+            // SVG rectangle specific attributes
+            .attr('x', (d,i) => {
+              return Math.floor(i % 34) * (gridSize + gap);
+            })
+            .attr('y', (d,i) => {
+              return Math.floor(i / 34) * (gridSize + gap) + (legendData.length * 30); 
+              // Offset by legend height
+            })
+            .attr('width', gridSize)
+            .attr('height', gridSize)
+            .style('fill', d => {
+              if (d.Boardseats == '5') {return 'Maroon'}
+              if (d.Boardseats == '4') {return 'IndianRed'}
+              if (d.Boardseats == '3') {return 'pink'}
+              if (d.Boardseats == '2') {return 'LightCoral'}
+              if (d.Boardseats == '1') {return 'LightSalmon'}
+             
+              // else {return 'black'}
+            })
+            // Add tooltip functionality
+            .on("mouseover", (event, d) => {
+              tooltip.style("visibility", "visible")
+                     .text(`Board member: ${d.Names}`);
+            })
+            .on("mousemove", (event) => {
+              tooltip.style("top", (event.pageY - 10) + "px")
+                     .style("left", (event.pageX + 10) + "px");
+            })
+            .on("mouseout", () => {
+              tooltip.style("visibility", "hidden");
+            });
+
+        });
+    </script>
+  </head>
+  <body>
+    <h1>Most people sitting on Finnish company boards have just one board seat</h1>
+    <p>There are a total of 1346 board seats in Finnish listed companies. 
+      There are some indivuduals who have power in multiple companies: 1.11 percent of all board members have five board seats.
+      The average number of board seats per person is 1.18. Allmost 20 percent of those who are board members in finnish public companies sit in two different boards. </p>
+
+      
+      <h3>Eight percent of board members form a network of power</h3>
+      <h5>A square represents one board seat. By hovering the cursor over a square, you can see a name of a board member</h5>
+      <p><i>The figures are derived from the companies' annual reports as of April 2024.</i></p>
+    <div id="my-svg-chart"></div>
+  </body>
+</html>
