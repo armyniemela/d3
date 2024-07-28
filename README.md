@@ -8,4 +8,8 @@ I asked ChatGPT for help when creating a legend for the SVG.
 
 It's frustrating how long (a total of about 6 hours) it took to produce something this simple!
 
+## Animation with button
+
+As a homework assignment, I added a button to my page to make the chart appear. Initially, I wanted to make an animation with an SVG image, but it was too hard (even with youtube guides...). Making this required asking ChatGPT, so I don't know if I really learned anything - just that making graphics with coding is really, really difficult.
+
  https://armyniemela.github.io/d3/
