@@ -1,26 +1,33 @@
 <!doctype html>
 <html>
-  <head>
-    <!-- some basic stuff  -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My D3</title>
+<head>
+  <!-- some basic stuff  -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My D3</title>
 
-    <!-- 
-      add your stylesheet 
-      base.css loads the basic stuff
-      you can tweak your css in custom.css
-      WARNING: the order of the stylesheets matters
-    -->
-    <link rel="stylesheet" href="base.css">
-    <link rel="stylesheet" href="custom.css">
+  <!-- 
+    add your stylesheet 
+    base.css loads the basic stuff
+    you can tweak your css in custom.css
+    WARNING: the order of the stylesheets matters
+  -->
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="custom.css">
 
-    <!-- add your d3 script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-    
-    <!-- your JS code that uses d3 to manipulate data -->
-    <script>
-      // Step 4. load your data with d3.csv()
+  <!-- add your d3 script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  
+  <style>
+    /* Initial hidden state for the chart */
+    #my-svg-chart {
+      display: none;
+    }
+  </style>
+
+  <!-- your JS code that uses d3 to manipulate data -->
+  <script>
+    function loadChart() {
       d3.csv("powerpeople.csv")
         .then(data => {
           // check if the data is loaded:
@@ -66,6 +73,7 @@
             .style('text-anchor', 'start')
             .text(d => d.label);
 
+            
           // Create a tooltip div that is hidden by default
           const tooltip = d3.select("body")
             .append("div")
@@ -121,21 +129,30 @@
             });
 
         });
-    </script>
-  </head>
-  <body>
-    <h1>Most people sitting on Finnish company boards have just one board seat</h1>
-    <p>There are a total of 1346 board seats in Finnish listed companies. 
-      There are some indivuduals who have power in multiple companies: 1.11 percent of all board members have five board seats.
-      The average number of board seats per person is 1.18. Allmost 20 percent of those who are board members in finnish public companies sit in two different boards. </p>
+    }
 
-      
-      <h3>Eight percent of board members form a network of power</h3>
-      <h5>A square represents one board seat. By hovering the cursor over a square, you can see a name of a board member</h5>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('btn').addEventListener('click', () => {
+        document.getElementById('my-svg-chart').style.display = 'block';
+        loadChart(); // Load and render the chart
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Most people sitting on Finnish company boards have just one board seat</h1>
+  <p>There are a total of 1346 board seats in Finnish listed companies. 
+    There are some individuals who have power in multiple companies: 1.11 percent of all board members have five board seats.
+    The average number of board seats per person is 1.18. Almost 20 percent of those who are board members in Finnish public companies sit in two different boards.</p>
 
-    <div id="my-svg-chart"></div>
     
-    <p><i>The figures are derived from the companies' annual reports 2023-2024. 
-      Data was collected 4/2024 by Alma Business Media.</i></p>
-  </body>
+    <h3>Eight percent of board members form a network of power</h3>
+    <h5>A square represents one board seat. By hovering the cursor over a square, you can see the name of a board member</h5>
+    <p><i>The figures are derived from the companies' annual reports as of April 2024.</i></p>
+  <!-- Your button here -->
+  <button id="btn">Show board seats grapich</button>
+
+  <div id="my-svg-chart"></div>
+
+</body>
 </html>
